@@ -1,0 +1,269 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Bootstrap CRUD Data Table for Database with Modal Form</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+<div class="container-xl">
+	<div class="table-responsive">
+		<div class="table-wrapper">
+			<div class="table-title">
+				<div class="row">
+					<div class="col-sm-6">
+						<h2> <b>Employees</b></h2>
+					</div>
+					<!--<div class="col-sm-6">
+						<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Employee</span></a>
+						<a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>						
+					</div>-->
+				</div>
+			</div>
+            
+            
+		</div>
+	</div>        
+</div>
+<!-- Edit Modal HTML -->
+		<div class="modal-content w-50 m-auto">
+			<input type="hidden"  name="employee_id" value="" id="employee_id">
+			<form id="EmployeeForm">
+				{% csrf_token %}
+				<div class="modal-header">						
+					<h4 class="modal-title">Create Employee</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+
+
+				<div class="modal-body">					
+					<div class="form-group">
+						<label>Employee Name</label>
+						<input type="text" class="form-control" name="name" id="name" required>
+					</div>
+					<div class="form-group">
+						<label>Salary</label>
+						<input type="number" class="form-control"  name="salary" id="salary" required>
+					</div>
+					<div class="form-group">
+						<label>Joining Date</label>
+						<input class="form-control" type="date" name="joining_date" id="joining_date" >
+					</div>    	
+				</div>
+
+                
+				<div class="modal-footer">
+					<input type="submit" class="btn btn-success" value="Create" id="EmployeeCreate">
+				</div>
+			</form>
+			<div class="alert alert-primary" role="alert" id="Employeealert" style="display:None;">
+				This is a primary alert—check it out!
+			  </div>
+		</div>
+
+
+
+        <hr><hr>
+        <div class="modal-content w-50 m-auto">
+			<form id="FamilyMemeberForm" method="post">
+				{% csrf_token %}
+				<div class="modal-header">						
+					<h4 class="modal-title">Create Family Member</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+
+
+				<div class="modal-body">					
+					<div class="form-group">
+						<label>Family Member Name</label>
+						<input type="text" class="form-control" name="member" id="member">
+					</div>
+					<div class="form-group">
+						<label>Relation with Employee</label>
+						<input type="text" class="form-control"  name="relation_with_employee" id="relation_with_employee">
+					</div>
+					<div class="form-group">
+						<label>Profession</label>
+						<input class="form-control" type="text" name="profession" id="profession">
+					</div>    	
+				</div>
+
+                
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+					<input type="submit" class="btn btn-success" value="Create" id="FamilyMemberCreate">
+				</div>
+			</form>
+
+			<div id="Familymemeberalert" class="alert alert-primary" style="display:None;">
+				hello world
+			</div>
+		</div> 
+
+ 
+
+
+        <hr><hr>
+        <div class="modal-content w-50 m-auto">
+			<form method="post" id="OrganizationForm">
+				{% csrf_token %}
+				<div class="modal-header">						
+					<h4 class="modal-title">Create Previous Organization</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+
+
+				<div class="modal-body">					
+					<div class="form-group">
+						<label>Organization Name</label>
+						<input type="text" class="form-control" name="organization_name" id="organization_name">
+					</div>
+					<div class="form-group">
+						<label>Description</label>
+						<input type="text" class="form-control"  name="organization_description" id="organization_description">
+					</div>
+                    
+				</div>
+
+                
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+					<input type="submit" class="btn btn-success" value="Create" id="OrganizationCreate">
+				</div>
+			</form>
+			<div id="organizationalert" class="alert alert-primary" style="display:None;">
+				organizationalert
+
+				
+			</div>
+		</div>
+
+
+        
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+		
+<script>
+    $(document).ready(function(){
+       
+		 
+
+		$('#EmployeeCreate').click(function(e){
+			
+			e.preventDefault();
+			var name = $('#name').val();
+			var salary = $('#salary').val();
+			var joining_date = $('#joining_date').val();
+			var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+			mydata = {
+				name:name,
+				salary:salary,
+				joining_date:joining_date,
+				csrfmiddlewaretoken:csrf_token,
+			};
+			console.log(mydata);
+            $.ajax({
+                url: "{% url 'employee_create' %}",
+                method: "POST",
+                data: mydata,
+                success: function(data) {
+						console.log(data);
+						console.log(data.employee_id)
+						$('#Employeealert').show();
+                        $('#Employeealert').text('Employee created successfully !!');                        
+                        $('#EmployeeForm')[0].reset();
+						$('#employee_id').val(data.employee_id)
+
+                }
+            });
+		});
+
+		// Family Member creation 
+		$('#FamilyMemberCreate').click(function(e){
+			
+			e.preventDefault();
+			var employee_id = $('#employee_id').val();
+			var member = $('#member').val();
+			var relation_with_employee = $('#relation_with_employee').val();
+			var profession = $('#profession').val();
+			var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+			console.log(employee_id)		
+			mydata = {
+				employee_id:employee_id,
+				member:member,
+				relation_with_employee:relation_with_employee,
+				profession:profession,
+				csrfmiddlewaretoken:csrf_token,
+			};
+			console.log(mydata);
+            $.ajax({
+                url: "{% url 'family_member_create' %}",
+                method: "POST",
+                data: mydata,
+                success: function(data) {
+					$('#Familymemeberalert').show();
+					$('#Familymemeberalert').text('Family Member created successfully !!');                        
+					$('#FamilyMemeberForm')[0].reset();
+
+                }
+            });
+		});
+		
+		
+		// Organization creation
+		$('#OrganizationCreate').click(function(e){
+			
+			e.preventDefault();
+			var employee_id = $('#employee_id').val();
+			var organization_name = $('#organization_name').val();
+			var organization_description = $('#organization_description').val();
+			var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+			mydata = {
+				employee_id:employee_id,
+				organization_name:organization_name,
+				organization_description:organization_description,
+				csrfmiddlewaretoken:csrf_token,
+			};
+			console.log(mydata);
+            $.ajax({
+                url: "{% url 'organization_create' %}",
+                method: "POST",
+                data: mydata,
+                success: function(data) {
+					$('#organizationalert').show();
+					$('#organizationalert').text('Previous Organization created successfully !!');                        
+					$('#OrganizationForm')[0].reset();
+
+                }
+            });
+		});
+
+
+
+
+
+
+		
+		
+		
+		
+		
+
+		
+           
+
+
+    });
+    </script>
+</body>
+</html>
