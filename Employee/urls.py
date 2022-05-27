@@ -4,7 +4,15 @@
 
 from django.contrib import admin
 from django.urls import include,path
-from Employee.views import EmployeeListView, EmployeeEditView, EmployeeDeleteView, EmployeeCreateView, FamilyMemeberCreateView, OrganizationCreateView
+from Employee.views import ( EmployeeListView,
+                             EmployeeEditView, 
+                             EmployeeDeleteView, 
+                             EmployeeCreateView, 
+                             FamilyMemeberCreateView, 
+                             OrganizationCreateView, 
+                             FamilyMemeberEditView, 
+                             OrganizationEditView
+                             )
 
 
 urlpatterns = [
@@ -15,7 +23,11 @@ urlpatterns = [
     
     
     path('FamilyMemeberCreate/', FamilyMemeberCreateView.as_view(), name="family_member_create"), 
+    path('FamilyMemeberEdit/', FamilyMemeberEditView.as_view(), name="family_member_edit"), 
+    
+    
     path('OranizationMemeberCreate/', OrganizationCreateView.as_view(), name="organization_create"), 
+    path('OranizationMemeberEdit/', OrganizationEditView.as_view(), name="organization_edit"), 
 
 
 ]

@@ -21,10 +21,9 @@
 					<div class="col-sm-6">
 						<h2> <b>Employees</b></h2>
 					</div>
-					<!--<div class="col-sm-6">
-						<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Employee</span></a>
-						<a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>						
-					</div>-->
+					<div class="col-sm-6">
+						<a href="{% url 'employee_list' %}" class="btn btn-success" ><i class="material-icons"></i> <span>Home</span></a>
+					</div>
 				</div>
 			</div>
             
@@ -34,7 +33,7 @@
 </div>
 <!-- Edit Modal HTML -->
 		<div class="modal-content w-50 m-auto">
-			<input type="hidden"  name="employee_id" value="" id="employee_id">
+
 			<form id="EmployeeForm">
 				{% csrf_token %}
 				<div class="modal-header">						
