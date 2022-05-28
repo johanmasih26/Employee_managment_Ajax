@@ -6,24 +6,12 @@ from Employee.models import Employee, FamilyDetail, PreviousOrganization
 
 class EmployeeListView(View):
     def get(self, request, *args, **kwargs):
-        employee_list = Employee.objects.all()    
+        employee_list = Employee.objects.all()
+        print(x)    
         context = {'employee_list' : employee_list}
         return render(request,'index.html', context)
 
 
-# class EmployeeCreateView(View):
-#     def get(self, request, *args, **kwargs):
-#         employee_list = Employee.objects.all()    
-#         context = {'employee_list' : employee_list}
-#         return render(request,'employee_create.html', context)
-    
-#     def post(self, request, *args, **kwargs):
-#         name = request.POST['name']    
-#         salary = request.POST['salary']    
-#         joining_date = request.POST['joining_date']    
-#         employee = Employee.objects.create(name=name, salary=salary, joining_date=joining_date)
-#         employee.save()
-#         return JsonResponse({'status':'save'})
 
 class EmployeeCreateView(View):
     def get(self, request, *args, **kwargs):
@@ -44,7 +32,8 @@ class FamilyMemeberCreateView(View):
     def post(self, request, *args, **kwargs):
         employee = Employee.objects.get(id=request.POST['employee_id'])
         member = request.POST['member']    
-        relation_with_employee = request.POST['relation_with_employee']    
+        relation_with_employee = request.POST['relation_with_employee']
+        relation_with_employee = relation_with_employee.lower()    
         profession = request.POST['profession']
         family_detail = FamilyDetail.objects.create(employees = employee, name=member, relation_with_employee = relation_with_employee, profession=profession)
         family_detail.save()
@@ -117,7 +106,9 @@ class FamilyMemeberEditView(View):
         if request.POST.get('name'):
             family_member_obj.name = request.POST['name']
         if request.POST.get('relation_with_employee'):
-            family_member_obj.relation_with_employee = request.POST['relation_with_employee'] 
+            relation_with_employee = request.POST.get('relation_with_employee')
+            relation_with_employee = relation_with_employee.lower()
+            family_member_obj.relation_with_employee = relation_with_employee 
         if request.POST.get('profession'):
             family_member_obj.profession = request.POST.get('profession') 
         family_member_obj.save()
@@ -139,3 +130,33 @@ class OrganizationEditView(View):
         organization_Obj.save()
         return HttpResponse('Updated !!!!!')
 
+
+def CheckNumber(string):
+    import re
+    regex = '^[0-9]+$'
+    if(re.search(regex, string)):
+        return True
+    else:
+        return False
+
+class EmployeeSearchView(View):
+    def get(self, request, *args, **kwargs):
+        family_objects = []
+        list1 = []
+        searchInput = request.GET['search']
+        if CheckNumber(searchInput):
+            employee_list = Employee.objects.filter(salary = searchInput)
+        else:
+            employee_list = Employee.objects.filter(name__icontains=searchInput)
+            family_objects =  FamilyDetail.objects.filter(name__icontains=searchInput ,relation_with_employee='father')
+        
+        
+        for employee in employee_list:
+            list1.append(employee)
+        for family in family_objects:
+            list1.append(family.employees)      
+        context = {
+            'employee_list': list1,
+        }
+
+        return render(request, 'index.html', context)

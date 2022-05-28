@@ -11,7 +11,8 @@ from Employee.views import ( EmployeeListView,
                              FamilyMemeberCreateView, 
                              OrganizationCreateView, 
                              FamilyMemeberEditView, 
-                             OrganizationEditView
+                             OrganizationEditView,
+                             EmployeeSearchView
                              )
 
 
@@ -29,5 +30,7 @@ urlpatterns = [
     path('OranizationMemeberCreate/', OrganizationCreateView.as_view(), name="organization_create"), 
     path('OranizationMemeberEdit/', OrganizationEditView.as_view(), name="organization_edit"), 
 
+
+    path('search/', EmployeeSearchView.as_view(), name="employee_search"),
 
 ]
