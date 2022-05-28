@@ -56,6 +56,9 @@
 							<a href="{% url 'employee_delete' employee.id %}" class="delete" ><i class="material-icons"  title="Delete">&#xE872;</i></a>
 						</td>
 					</tr>
+					{% empty %}
+						<td> No Record Matched....</td>
+					
 					{% endfor %}
 				</tbody>
 			</table>
